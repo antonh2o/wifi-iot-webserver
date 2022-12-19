@@ -14,7 +14,7 @@ function curl($url) {
 # генерация ссылок
 function a_href($target, $url)
 {
- $a_target = '<a href="'.$url.'?select='.$target.'" > '.$target.' </a>';
+ $a_target = '<a href="'.$url.'?select='.$target.'" >'.$target.'</a>';
  return($a_target);
 }
 
@@ -32,7 +32,7 @@ function url_parsing($url) {
     }
     else {
        foreach ($value as $k => $v) {
-             $str .= " <b> ". $k."</b>:".a_href(ucfirst ($v), $url)." ";
+             $str .= "<b>". $k."</b>:".a_href(ucfirst($v), $url)." ";
           }
     }
  }
