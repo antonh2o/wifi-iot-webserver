@@ -1,43 +1,6 @@
 <?php
 
-# curl url
-function curl($url) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-    $data = curl_exec($ch);
-    curl_close($ch);
-
-    return $data;
-}
-
-# генерация ссылок
-function a_href($target, $url)
-{
- $a_target = '<a href="'.$url.'?select='.$target.'" >'.$target.'</a>';
- return($a_target);
-}
-
-
-// Парсинг урла
-function url_parsing($url) {
- $json_opt = curl($url);
- $arrayiter = new RecursiveArrayIterator(json_decode($json_opt, TRUE));
- $iteriter = new RecursiveIteratorIterator($arrayiter);
-
- foreach ($arrayiter as $key => $value) {
-    // Проверка на массив
-    if (is_array($value) == False) {
-        $hostname = $value ;
-    }
-    else {
-       foreach ($value as $k => $v) {
-             $str .= "<b>". $k."</b>:".a_href(ucfirst($v), $url)." ";
-          }
-    }
- }
-    return $str;
-} // end parsing func
+require 'myfunctions.php';
 
 # ip
 $ip = "10.10.99.77";
@@ -72,7 +35,7 @@ foreach ($arrayiter as $key => $value) {
            $freemem = "FreeMemory: ".$v." B.";
            break;
          case 'uptime':
-           $uptime = $v." sec.";
+           $uptime = secToStr($v);
            break;
          case 'rssi':
            $rssi = $v." dBm.";
