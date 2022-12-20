@@ -1,4 +1,5 @@
 <?php
+$r=''; $sens=''; $updated =''; $str ='';
 
 require 'myfunctions.php';
 
