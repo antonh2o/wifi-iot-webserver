@@ -17,6 +17,10 @@ $url_all="http://".$ip."/jsonoptions?select=all";
 $read="http://".$ip."/readjson";
 
 $localtime = date('d.m.Y H:i:s');
+$hostname = pars_sensors($read)[0];
+$hardparm = pars_sensors($read)[1];
+$sensors = pars_sensors($read)[2];
+$read = pars_sensors($read)[3];
 echo '
 <!doctype html>
 <html lang="en">
@@ -36,25 +40,21 @@ echo '
 <br>
 <div style="text-align: center">
 <div style="display: inline-block">
-<div class="name fll">';print_r(pars_sensors($read)[0]); echo'
+<div class="name fll">'.$hostname.'
  <div class="www">MaksMS <a href="http://wifi-iot.com" target="_blank">wifi-iot.com</a>
 <br> Pro mode</div>
 </div>
 <div class="spV2 fll"></div>
 <div class="spV fll"></div>
 <div class="spV2 fll"></div>
-<div class="sys fll">';print_r(pars_sensors($read)[1]);
-echo "Local Time: ".$localtime.'<br>
+<div class="sys fll">'.$hardparm.'Local Time: '.$localtime.'<br>
   </div>
  </div>
 </div>
 <div class="c2" >
 <div class="h" style="background: #7D8EE2">Sensors:</div>
-<div class="c">';
-print_r(pars_sensors($read)[2]);
-echo '<br>
-<br><b>Не распарсено:</b><br>';print_r(pars_sensors($read)[3]); 
-echo '
+<div class="c">'.$sensors.'<br>
+<b>Не распарсено:</b><br>'.$read.'
 <div class="dummy fll"> </div>
 <script type="text/javascript" src="js.js"></script>
 </div>

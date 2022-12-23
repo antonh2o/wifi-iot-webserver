@@ -1,5 +1,4 @@
 <?php
-
 # curl url
 function curl($url) {
     $ch = curl_init();
@@ -93,15 +92,15 @@ function secToStr($secs)
 
 // Байты -Кб -Мб -Гб
 function formatBytes($bytes, $precision = 2) {
-    $units = array('B', 'Kb', 'Mb', 'Gb', 'Tb');
+    $units = array('B', 'KB', 'MB', 'GB', 'TB');
 
-    $bytes = max($bytes, 0);
+//    $bytes = max($bytes, 0);
     $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
-    $pow = min($pow, count($units) - 1);
+//    $pow = min($pow, count($units) - 1);
 
     // Uncomment one of the following alternatives
-    // $bytes /= pow(1024, $pow);
-    // $bytes /= (1 << (10 * $pow));
+     $bytes /= pow(1024, $pow);
+//     $bytes /= (1 << (10 * $pow));
 
     return round($bytes, $precision) . ' ' . $units[$pow];
 }
@@ -110,8 +109,10 @@ function formatBytes($bytes, $precision = 2) {
 // read json
 function pars_sensors($read) {
   $json = curl($read);
+ try{
   $arrayiter = new RecursiveArrayIterator(json_decode($json, TRUE));
   $iteriter = new RecursiveIteratorIterator($arrayiter);
+  $r=''; $sens=''; $hardparm =''; $str ='';
 
   foreach ($arrayiter as $key => $value) {
     // Проверка на массив
@@ -171,7 +172,9 @@ function pars_sensors($read) {
   }
  }
  return array($hostname = $hostname, $hardparm = $hardparm, $sens = $sens, $r = $r);
+ }catch(Exception $ex){
+   return "Error 404";
+ }
 }
-
 
 ?>
