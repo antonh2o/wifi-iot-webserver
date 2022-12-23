@@ -4,7 +4,7 @@ $r=''; $sens=''; $updated =''; $str ='';
 require 'myfunctions.php';
 
 # ip
-$ip = "10.10.99.77";
+$ip = "10.10.99.75";
 
 # url api
 $url="http://".$ip."/jsonoptions";
@@ -13,53 +13,8 @@ $str = url_parsing($url);
 # url api all
 $url_all="http://".$ip."/jsonoptions?select=all";
 
-
 # url read json
 $read="http://".$ip."/readjson";
-
-// read json
-$json = curl($read);
-$arrayiter = new RecursiveArrayIterator(json_decode($json, TRUE));
-$iteriter = new RecursiveIteratorIterator($arrayiter);
-foreach ($arrayiter as $key => $value) {
-    // Проверка на массив
-    if (is_array($value) == False) {
-        echo "value: ".$value ;
-    }
-    else {
-     foreach ($value as $k => $v) {
-       switch ($k) {
-         case 'hostname':
-           $hostname = $v;
-           break;
-         case 'freemem':
-           $freemem = "FreeMemory: ".$v." B.";
-           break;
-         case 'uptime':
-           $uptime = secToStr($v);
-           break;
-         case 'rssi':
-           $rssi = $v." dBm.";
-           break;
-         case 'btval0101':
-           $sens .= "<b>BTHUB 1 LYWSD03:</b></br>Температура: ".$v." °C<br>";
-           break;
-         case 'btval0102':
-           $sens .= "Влажность: ".$v." %<br>";
-           break;
-         case 'btval0103':
-           $sens .= "Battery: ".$v." %<br>";
-           break;
-         case 'btrssi1':
-           $sens .= "Btrssi: ".$v." Dbm.<br>";
-           break;
-         default:
-           $r .= " ". $k.":" . $v. " <br>";
-    }
-  }
- }
-}
-
 
 $localtime = date('d.m.Y H:i:s');
 echo '
@@ -81,26 +36,25 @@ echo '
 <br>
 <div style="text-align: center">
 <div style="display: inline-block">
-<div class="name fll">'.$hostname.'
+<div class="name fll">';print_r(pars_sensors($read)[0]); echo'
  <div class="www">MaksMS <a href="http://wifi-iot.com" target="_blank">wifi-iot.com</a>
 <br> Pro mode</div>
 </div>
 <div class="spV2 fll"></div>
 <div class="spV fll"></div>
 <div class="spV2 fll"></div>
-<div class="sys fll">'.$freemem.'
-<br>Uptime: '.$uptime.'
-  <br> WIFI: '.$rssi.'
-  <br>Updated: '.$updated.'
-  <br>Local Time: '.$localtime.'
-  <br>
+<div class="sys fll">';print_r(pars_sensors($read)[1]);
+echo "Local Time: ".$localtime.'<br>
   </div>
  </div>
 </div>
 <div class="c2" >
 <div class="h" style="background: #7D8EE2">Sensors:</div>
-<div class="c">'.$sens.'<br>
-<br><b>Не распарсено:</b><br>'.$r.'
+<div class="c">';
+print_r(pars_sensors($read)[2]);
+echo '<br>
+<br><b>Не распарсено:</b><br>';print_r(pars_sensors($read)[3]); 
+echo '
 <div class="dummy fll"> </div>
 <script type="text/javascript" src="js.js"></script>
 </div>
@@ -114,3 +68,29 @@ echo '
 ';
 
 ?>
+<script>
+$(function() {
+ var tab = $('#tabs .tabs-items > div');
+ tab.hide().filter(':first').show();
+
+ // Клики по вкладкам.
+ $('#tabs .tabs-nav a').click(function(){
+  tab.hide();
+  tab.filter(this.hash).show();
+  $('#tabs .tabs-nav a').removeClass('active');
+  $(this).addClass('active');
+  return false;
+ }).filter(':first').click();
+
+ // Клики по якорным ссылкам.
+ $('.tabs-target').click(function(){
+  $('#tabs .tabs-nav a[href=' + $(this).attr('href')+ ']').click();
+ });
+
+ // Отрытие вкладки из хеша URL
+ if(window.location.hash){
+  $('#tabs-nav a[href=' + window.location.hash + ']').click();
+  window.scrollTo(0, $("#" . window.location.hash).offset().top);
+ }
+});
+</script>
